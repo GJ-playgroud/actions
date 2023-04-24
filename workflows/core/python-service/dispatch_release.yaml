@@ -21,6 +21,29 @@ env:
   SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
 
 jobs:
+  update_base_image:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.inputs.beginning }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BRANCH }}
+
+      - name: Update base image version in Dockerfile
+        run: |
+          sed -i 's/FROM cloudforet/python-core:.+$/FROM cloudforet/python-core:${{ env.VERSION }}/' Dockerfile
+
+      - name: Push artifacts to origin master
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          branch: master
+          commit_message: "CI: Update version of base image in Dockerfile"
+          commit_user_name: cloudforet-admin
+          commit_user_email: admin@cloudforet.io
+          commit_author: cloudforet-admin <admin@cloudforet.io>
+          push_options: '--force'
+
   docker:
     runs-on: ubuntu-latest
     steps:
