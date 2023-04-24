@@ -39,6 +39,7 @@ jobs:
           inputs: '{"dest" : "${{ github.event.repository.name }}"}'
           trigger_workflow: true
           wait_workflow: true
+
   pull_workflows:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
