@@ -50,6 +50,21 @@ jobs:
       - name: Checkout
         run: echo "docker"
 
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ env.BRANCH }}
+
+      - name: tagging
+        run: |
+          git config user.email admin@GJ-playgroud.com
+          git config user.name GJ-playgroud-admin
+          git tag ${{ env.VERSION }}
+          git push origin ${{ env.VERSION }}
+
   scan:
     needs: docker
     runs-on: ubuntu-20.04
