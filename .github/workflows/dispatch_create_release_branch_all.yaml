@@ -1,0 +1,125 @@
+name: "[dispatch] create release branch all"
+on:
+  workflow_dispatch:
+    inputs:
+      branch_name:
+        description: branch name (release-x.y.z)
+        required: true
+        default: 'release-1.0.0'
+
+env:
+  BRANCH_NAME: ${{ github.event.inputs.branch_name }}
+  SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+
+jobs:
+  core_python_core:
+    if: github.repository_owner == 'GJ-playgroud'
+    runs-on: ubuntu-latest
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/core-python-core
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  core_api:
+    needs: core_python_core
+    runs-on: ubuntu-latest
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/core-api
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  core_console:
+    needs: core_api
+    runs-on: ubuntu-latest
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/core-console
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  core_console_api:
+    needs: core_console
+    runs-on: ubuntu-latest
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/core-console-api
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  core_python_service:
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        target: ['core-python-service']
+    needs: core_console_api
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/${{ matrix.target }}
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  tools:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ['tools-spacectl', 'tools-image-cleaner']
+    needs: core_python_service
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/${{ matrix.target }}
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  doc:
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ['doc-api-doc', 'doc-docs', 'doc-marketplace-assets']
+    needs: tools
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - name: task
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          token: ${{ secrets.PAT_TOKEN }}
+          repo: GJ-playgroud/${{ matrix.target }}
+          workflow: dispatch_create_release_branch_all.yaml
+          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+
+  notify_to_slack:
+    needs: [doc]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack
+        if: always()
+        uses: 8398a7/action-slack@v3.15.0
+        with:
+          status: ${{job.status}}
+          fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+          author_name: Github Action Slack

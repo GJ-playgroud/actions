@@ -1,0 +1,32 @@
+name: "[Push] Build dev"
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [master_push]
+
+env:
+  SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: echo "docker"
+
+  scan:
+    needs: docker
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Run Trivy vulnerability scanner
+        id: trivy-scan
+        run: echo "scan"
+
+  notification:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack
+        if: always()
+        run: echo "noti"

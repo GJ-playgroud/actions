@@ -1,0 +1,44 @@
+name: "[Dispatch] Release"
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'branch를 입력해주세요(master와 release-x.y.z만 허용)'
+        required: true
+        default: 'master'
+      version:
+        description: 'version을 입력해주세요(x.y.z)'
+        required: true
+        default: '1.0.0'
+      beginning:
+        description: 'release의 첫 시작인 경우 true를 넣어주세요'
+        required: false
+
+env:
+  BRANCH: ${{ github.event.inputs.branch }}
+  VERSION: ${{ github.event.inputs.version }}
+  SLACK_WEBHOOK_URL: ${{secrets.SLACK_WEBHOOK_URL}}
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        run: echo "docker"
+
+  scan:
+    needs: docker
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Run Trivy vulnerability scanner
+        id: trivy-scan
+        run: echo "scan"
+
+  notification:
+    needs: docker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Slack
+        if: always()
+        run: echo "noti"
