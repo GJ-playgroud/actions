@@ -15,7 +15,7 @@ def parse_args():
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('--org', metavar='"organization"', default='GJ-playgroud',
-                        required=True, help='organization of github repository (Default=GJ-playgroud)')
+                        help='organization of github repository (Default=GJ-playgroud)')
 
     parser.add_argument('--dest', metavar='"destination"',
                         required=True, help='destination of workflows')
