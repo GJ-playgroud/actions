@@ -22,7 +22,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-python-core
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   core_api:
     needs: core_python_core
@@ -34,7 +34,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-api
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   core_console:
     needs: core_api
@@ -46,7 +46,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-console
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   core_console_api:
     needs: core_console
@@ -58,7 +58,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-console-api
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   core_python_service:
     strategy:
@@ -76,7 +76,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   tools:
     strategy:
@@ -93,7 +93,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   doc:
     strategy:
@@ -110,7 +110,7 @@ jobs:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
           workflow: dispatch_create_branch.yaml
-          inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
+          inputs: '{"branch_name": "${{ env.BRANCH_NAME }}"}'
 
   notify_to_slack:
     needs: [doc]
