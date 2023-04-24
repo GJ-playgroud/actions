@@ -21,7 +21,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-python-core
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   core_api:
@@ -33,7 +33,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-api
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   core_console:
@@ -45,7 +45,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-console
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   core_console_api:
@@ -57,7 +57,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/core-console-api
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   core_python_service:
@@ -75,7 +75,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   tools:
@@ -92,7 +92,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   doc:
@@ -109,7 +109,7 @@ jobs:
         with:
           token: ${{ secrets.PAT_TOKEN }}
           repo: GJ-playgroud/${{ matrix.target }}
-          workflow: dispatch_create_branch
+          workflow: dispatch_create_branch.yaml
           inputs: '{"branch": "${{ env.BRANCH_NAME }}"}'
 
   notify_to_slack:
