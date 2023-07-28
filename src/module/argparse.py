@@ -14,8 +14,8 @@ def parse_args():
         '''),
         formatter_class=argparse.RawDescriptionHelpFormatter)
 
-    parser.add_argument('--org', metavar='"organization"', default='GJ-playgroud',
-                        help='organization of github repository (Default=GJ-playgroud)')
+    parser.add_argument('--org', metavar='"organization"', default='cloudforet-io',
+                        help='organization of github repository (Default=cloudforet-io)')
 
     parser.add_argument('--dest', metavar='"destination"',
                         required=True, help='destination of workflows')

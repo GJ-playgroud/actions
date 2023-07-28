@@ -12,7 +12,7 @@ class GithubConnector:
     def __init__(self):
         self.token = os.getenv('PAT_TOKEN', None)
         self.github_client = Github(self.token)
-        self.committer = github.InputGitAuthor(name='cloudforet-admin', email='admin@GJ-playgroud.com')
+        self.committer = github.InputGitAuthor(name='cloudforet-admin', email='admin@cloudforet.io')
 
     def list_repo(self, org):
         repositories = []
@@ -26,6 +26,7 @@ class GithubConnector:
         for repo in self.github_client.search_repositories(query=f'org:{org} {keyword}'):
             repositories.append(repo)
 
+        logging.info(f'found {len(repositories)} repositories')
         return repositories
 
     def get_repo(self, destination):
@@ -65,8 +66,6 @@ class GithubConnector:
             repo_vo.create_file(path=path, message="[CI] Deploy CI", content=content, branch="master",
                                 committer=self.committer)
             return 200
-        except GithubException as e:
-            raise Exception(e)
         except Exception as e:
             raise Exception(e)
 
@@ -79,7 +78,5 @@ class GithubConnector:
                                 branch="master",
                                 committer=self.committer)
             return 200
-        except GithubException as e:
-            raise GithubException(e)
         except Exception as e:
             raise Exception(e)
